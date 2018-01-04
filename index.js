@@ -106,7 +106,7 @@ app.get('/callback', function (req, res) {
       accessToken.access_token, /* oAuth access token */
       false, /* no token secret for oAuth 2.0 */
       req.query.realmId,
-      true, /* use a sandbox account */
+      false, /* use a sandbox account */
       true, /* turn debugging on */
       14, /* minor version */
       '2.0', /* oauth version */
