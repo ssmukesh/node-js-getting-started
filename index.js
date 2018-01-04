@@ -39,8 +39,13 @@ app.use(session({ resave: false, saveUninitialized: false, secret: 'smith' }));
 
 // INSERT YOUR CONSUMER_KEY AND CONSUMER_SECRET HERE
 
-var consumerKey = 'Q0q63VIwq7SAQ8v6aop4mol1V6n0jk2lUB5WKu4LPN60wJLgBF';
-var consumerSecret = 'gJaFcxJ8ouAx5RlQSkIjsjhwIUqfYXcP1IHaJeqC';
+// SandBox
+// var consumerKey = 'Q0q63VIwq7SAQ8v6aop4mol1V6n0jk2lUB5WKu4LPN60wJLgBF';
+// var consumerSecret = 'gJaFcxJ8ouAx5RlQSkIjsjhwIUqfYXcP1IHaJeqC';
+
+// PRODUCTION  
+var consumerKey = 'Q0VDE5PpLWcqaT2sZHjjFYHakq2vB6OBqa67Uhm7JrlyOSzski';
+var consumerSecret = 'FbEwwsfQi6V5DRUbjVAApAYjjMPuuz1161ipI1jg';
 
 // app.get('/', function (req, res) {
 //   res.redirect('/start');
@@ -96,9 +101,9 @@ app.get('/callback', function (req, res) {
       accessToken.access_token, /* oAuth access token */
       false, /* no token secret for oAuth 2.0 */
       req.query.realmId,
-      true, /* use a sandbox account */
+      false, /* use a sandbox account */
       true, /* turn debugging on */
-      4, /* minor version */
+      14, /* minor version */
       '2.0', /* oauth version */
       accessToken.refresh_token /* refresh token */);
 
