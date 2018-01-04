@@ -15,6 +15,11 @@ var QuickBooks = require('node-quickbooks');
 var Tokens = require('csrf');
 var csrf = new Tokens();
 
+// var jsdom = require('jsdom');
+// const { JSDOM } = jsdom;
+// const { window } = (new JSDOM(`...`)).window;
+//var window = document.defaultView;
+// var $ = require('jquery')(window);
 
 app.set('port', port);
 app.set('appCenter', QuickBooks.APP_CENTER_BASE);
@@ -24,7 +29,7 @@ QuickBooks.setOauthVersion('2.0');
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.get('/', (req, res) => res.render('pages/index'));
+app.get('/', (req, res) => res.render('pages/home'));
 app.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -35,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({ resave: false, saveUninitialized: false, secret: 'smith' }));
 
-
+app.use('/api_call', require('./routes/api_call.js'))
 
 // INSERT YOUR CONSUMER_KEY AND CONSUMER_SECRET HERE
 
@@ -101,18 +106,28 @@ app.get('/callback', function (req, res) {
       accessToken.access_token, /* oAuth access token */
       false, /* no token secret for oAuth 2.0 */
       req.query.realmId,
-      false, /* use a sandbox account */
+      true, /* use a sandbox account */
       true, /* turn debugging on */
       14, /* minor version */
       '2.0', /* oauth version */
       accessToken.refresh_token /* refresh token */);
 
-    qbo.findAccounts(function (_, accounts) {
-      accounts.QueryResponse.Account.forEach(function (account) {
-        //result+='' account.Name;
-        console.log(account.Name);
-      });
-    });
+    // qbo.findAccounts(function (_, accounts) {
+    //   accounts.QueryResponse.Account.forEach(function (account) {
+    //     //result+='' account.Name;
+    //     console.log(account.Name);
+    //   });
+    // });
+
+    qbo.findCustomers(function (_, customers) {
+
+      global.Customers = customers.QueryResponse.Customer;
+
+      // customers.QueryResponse.Customer.forEach(function (customer) {
+      //   console.log(customer.FullyQualifiedName);
+      // });
+
+    });    
 
   });
 
