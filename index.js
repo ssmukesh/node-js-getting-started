@@ -29,7 +29,8 @@ QuickBooks.setOauthVersion('2.0');
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.get('/', (req, res) => res.render('pages/home'));
+app.get('/', (req, res) => res.render('pages/qbconnect'));
+app.get('/home', (req, res) => res.render('pages/home'));
 app.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -71,7 +72,7 @@ function generateAntiForgery(session) {
 app.get('/requestToken', function (req, res) {
   var redirecturl = QuickBooks.AUTHORIZATION_URL +
     '?client_id=' + consumerKey +
-    '&redirect_uri=' + encodeURIComponent('https://qboauth2.herokuapp.com/callback') +  //Make sure this path matches entry in application dashboard
+    '&redirect_uri=' + encodeURIComponent('https://janhavimeadows.herokuapp.com/callback') +  //Make sure this path matches entry in application dashboard
     '&scope=com.intuit.quickbooks.accounting' +
     '&response_type=code' +
     '&state=' + generateAntiForgery(req.session);
@@ -93,7 +94,7 @@ app.get('/callback', function (req, res) {
     form: {
       grant_type: 'authorization_code',
       code: req.query.code,
-      redirect_uri: 'https://qboauth2.herokuapp.com/callback'  //Make sure this path matches entry in application dashboard
+      redirect_uri: 'https://janhavimeadows.herokuapp.com/callback'  //Make sure this path matches entry in application dashboard
     }
   };
 
@@ -112,25 +113,12 @@ app.get('/callback', function (req, res) {
       '2.0', /* oauth version */
       accessToken.refresh_token /* refresh token */);
 
-    // qbo.findAccounts(function (_, accounts) {
-    //   accounts.QueryResponse.Account.forEach(function (account) {
-    //     //result+='' account.Name;
-    //     console.log(account.Name);
-    //   });
-    // });
+    global.QuickBooksConfig = qbo;
 
-    qbo.findCustomers(function (_, customers) {
+    //res.render('pages/index');
 
-      global.Customers = customers.QueryResponse.Customer;
-
-      // customers.QueryResponse.Customer.forEach(function (customer) {
-      //   console.log(customer.FullyQualifiedName);
-      // });
-
-    });    
-
-  });
-
-  res.send('<!DOCTYPE html><html lang="en"><head></head><body><script>window.opener.location.reload(); window.close();</script></body></html>');
+  });  
+  // res.send('<!DOCTYPE html><html lang="en"><head></head><body><script>window.opener.location.reload(); window.close();</script></body></html>');
+  res.send('<!DOCTYPE html><html lang="en"><head></head><body><script>window.opener.location.assign("/home");window.close();</script></body></html>');
 });
 
